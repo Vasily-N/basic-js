@@ -15,10 +15,14 @@ const { NotImplementedError } = require('../extensions/index.js');
  * => 'STRINGPLUS00PLUS00PLUS**STRINGPLUS00PLUS00PLUS**STRINGPLUS00PLUS00PLUS'
  *
  */
-function repeater(/* str, options */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
-}
+
+const repeatString = (str, separator, repeatTimes) => 
+  Array.from({length: Math.max(repeatTimes || 1, 1)}, (_) => str).join(separator);
+
+const repeater = (str, options) =>
+  repeatString(str + ((typeof options.addition == 'undefined') ? ""
+      : repeatString(options.addition + "", options.additionSeparator || '|',  options.additionRepeatTimes)),
+  options.separator || '+', options.repeatTimes);
 
 module.exports = {
   repeater
