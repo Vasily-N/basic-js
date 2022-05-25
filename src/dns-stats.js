@@ -22,12 +22,12 @@ const { NotImplementedError } = require('../extensions/index.js');
  * }
  *
  */
- const getDNSStats = domains => domains.reduce((p, c) => {
-  const cArr = c.split('.').reverse();
-  cArr.forEach((v, i, a) => a[i] = ((i > 0) ? a[i - 1] : "") + '.' + v);
-  cArr.forEach(v => p[v] = (p[v] || 0) + 1);
-  return p;
-},{});
+ const getDNSStats = domains => domains.reduce((result, domain) =>
+  domain.split('.').reverse()
+    .map((sum => v => sum += `.${v}`)(""))
+    .reduce((result, c) =>
+      { return {...result, [c]: (result[c] || 0) + 1}; }, result)
+, {});
 
 module.exports = {
   getDNSStats
