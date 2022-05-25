@@ -15,15 +15,15 @@ const { NotImplementedError } = require('../extensions/index.js');
  * the output should be ["file", "file(1)", "image", "file(1)(1)", "file(2)"]
  *
  */
-const renameFiles = names => {
-  const getNewName = v => {
-    count[v] = (count[v] || 0) + 1;
-    return (count[v] == 1) ? v
-     : getNewName(`${v}(${count[v] - 1})`);
-  }
-  const count = {};
-  return names.map(v => getNewName(v));
-}
+const renameFiles = names =>
+    names.map((count =>
+      name => {
+        do {
+          if((count[name] = (count[name] || 0) + 1) === 1) return name;
+          name = `${name}(${count[name] - 1})`;
+        } while (true);
+      }
+    )({}));
 
 module.exports = {
   renameFiles
