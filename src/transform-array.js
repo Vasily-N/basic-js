@@ -13,25 +13,15 @@ const { NotImplementedError } = require('../extensions/index.js');
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  * 
  */
+
 const transform = arr => {
-  if(!Array.isArray(arr)) throw Error("'arr' parameter must be an instance of the Array!");
+  if (!Array.isArray(arr)) throw Error("'arr' parameter must be an instance of the Array!");
   return arr.reduce((p, c, i) => {
-    if (c == "--discard-prev") {
-      if (p[i - 2] != "--discard-next")
-        p.pop(); 
-    } else
-    if(c == "--double-prev") {
-      if (p.length > 0 && p[i - 2] != "--discard-next")
-        p.push(p[p.length - 1]);
-    } else
-    if (p[i - 1] == "--double-next") {
-      p = [...p, c, c];
-    } else
-    if (p[i - 1] != "--discard-next") {
-      p.push(c);
-    }
-    return p;
-  }, []).filter(v => v != "--discard-next" && v != "--double-next");
+    if (c ==='--discard-prev') return (p[i - 2] !== '--discard-next') ? p.slice(0, -1) : p;
+    if (c === '--double-prev') return (p.length > 0 && p[i - 2] !== '--discard-next') ? p.concat(p[p.length - 1]) : p;
+    if (p[i - 1] === '--double-next') return p.concat([c, c]);
+    return (p[i - 1] === '--discard-next') ? p : p.concat(c);
+  }, []).filter(v => v !== '--discard-next' && v !== '--double-next');
 }
 
 module.exports = {
